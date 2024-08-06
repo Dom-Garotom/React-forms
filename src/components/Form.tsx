@@ -1,7 +1,30 @@
 import { EyeIcon } from 'lucide-react';
+import { EyeOffIcon } from 'lucide-react';
+import { useState } from 'react';
 // import { EyeOffIcon } from 'lucide-react';
 
 export default function Form() {
+
+  const [isPassWrdVisible, setIsPassWordVisible] = useState(false);
+  const [isPassWrdVisibleConfirm, setIsPassWordVisibleConfirm] = useState(false);
+
+  function toglePasswordVisible() {
+    if (isPassWrdVisible) {
+      setIsPassWordVisible(false);
+    } else {
+      setIsPassWordVisible(true);
+    }
+  }
+
+  function toglePasswordVisibleConfirm() {
+    if (isPassWrdVisible) {
+      setIsPassWordVisibleConfirm(false);
+    } else {
+      setIsPassWordVisibleConfirm(true);
+    }
+  }
+
+
   return (
     <form>
       <div className="mb-4">
@@ -19,26 +42,46 @@ export default function Form() {
       <div className="mb-4">
         <label htmlFor="password">Senha</label>
         <div className="relative">
-          <input type="password" id="password" />
+          <input type={isPassWrdVisible ? 'text' : 'password'} id="password" />
           <span className="absolute right-3 top-3">
-            <EyeIcon size={20} className="text-slate-600 cursor-pointer" />
-            {/* <EyeOffIcon
-                      className="text-slate-600 cursor-pointer"
-                      size={20}
-                    /> */}
+            <button type='button' onClick={toglePasswordVisible}>
+              {isPassWrdVisible ? (
+                <EyeIcon
+                  className="text-slate-600 cursor-pointer"
+                  size={20}
+                />
+              ) : (
+
+                <EyeOffIcon
+                  className="text-slate-600 cursor-pointer"
+                  size={20}
+                />
+
+              )}
+            </button>
           </span>
         </div>
       </div>
       <div className="mb-4">
         <label htmlFor="confirm-password">Confirmar Senha</label>
         <div className="relative">
-          <input type="password" id="confirm-password" />
+          <input type={isPassWrdVisibleConfirm ? 'text' : 'password'} id="confirm-password" />
           <span className="absolute right-3 top-3">
-            <EyeIcon size={20} className="text-slate-600 cursor-pointer" />
-            {/* <EyeOffIcon
+          <button type='button' onClick={toglePasswordVisibleConfirm}>
+              {isPassWrdVisibleConfirm ? (
+                <EyeIcon
                   className="text-slate-600 cursor-pointer"
                   size={20}
-                /> */}
+                />
+              ) : (
+
+                <EyeOffIcon
+                  className="text-slate-600 cursor-pointer"
+                  size={20}
+                />
+
+              )}
+            </button>
           </span>
         </div>
       </div>
