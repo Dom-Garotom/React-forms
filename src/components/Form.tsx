@@ -1,6 +1,10 @@
 import { EyeIcon } from 'lucide-react';
 import { EyeOffIcon } from 'lucide-react';
 import { useState } from 'react';
+import { withMask } from 'use-mask-input';
+import axios from 'axios';
+import { toast } from 'sonner';
+
 // import { EyeOffIcon } from 'lucide-react';
 
 export default function Form() {
@@ -16,14 +20,29 @@ export default function Form() {
     }
   }
 
-  function toglePasswordVisibleConfirm() {
-    if (isPassWrdVisible) {
+  function toglePasswordVisibleConfirm( ) {
+
+    if (isPassWrdVisibleConfirm) {
       setIsPassWordVisibleConfirm(false);
     } else {
       setIsPassWordVisibleConfirm(true);
     }
   }
 
+  const cepApi = axios.create({
+    baseURL: "https://brasilapi.com.br/api/cep/v2",
+  })
+
+  function handleOnBlur( event :  React.FocusEvent<HTMLInputElement> ) {
+    const cep = event.currentTarget.value;
+    cepApi.get(`/${cep}`)
+      .then((response) => {
+        console.log(response.data.city);
+      })
+      .catch( () => {
+        toast.error("CEP inválido!")
+      })
+  }
 
   return (
     <form>
@@ -67,7 +86,7 @@ export default function Form() {
         <div className="relative">
           <input type={isPassWrdVisibleConfirm ? 'text' : 'password'} id="confirm-password" />
           <span className="absolute right-3 top-3">
-          <button type='button' onClick={toglePasswordVisibleConfirm}>
+            <button type='button' onClick={toglePasswordVisibleConfirm}>
               {isPassWrdVisibleConfirm ? (
                 <EyeIcon
                   className="text-slate-600 cursor-pointer"
@@ -86,16 +105,16 @@ export default function Form() {
         </div>
       </div>
       <div className="mb-4">
-        <label htmlFor="phone">Telefone Celular</label>
-        <input type="text" id="phone" />
+        <label htmlFor="phone" >Telefone Celular</label>
+        <input type="text" id="phone" ref={withMask('(99) 99999-9999')} />
       </div>
       <div className="mb-4">
         <label htmlFor="cpf">CPF</label>
-        <input type="text" id="cpf" />
+        <input type="text" id="cpf" ref={withMask('999.999.999-99')} />
       </div>
       <div className="mb-4">
         <label htmlFor="cep">CEP</label>
-        <input type="text" id="cep" />
+        <input type="text" id="cep" ref={withMask('99999-999')} onBlur={( e ) => handleOnBlur (e)} />
       </div>
       <div className="mb-4">
         <label htmlFor="address">Endereço</label>

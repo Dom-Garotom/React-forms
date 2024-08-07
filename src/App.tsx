@@ -1,5 +1,6 @@
 import FormHeader from './components/FormHeader';
 import Form from './components/Form';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <div className="mx-auto container max-w-md px-10 py-6 border-slate-300 border-2 rounded-2xl">
         <FormHeader />
         <Form />
+        <Toaster richColors/>
       </div>
     </main>
   );
