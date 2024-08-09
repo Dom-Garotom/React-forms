@@ -1,11 +1,10 @@
 import { EyeIcon } from 'lucide-react';
 import { EyeOffIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useRef } from 'react';
 import { withMask } from 'use-mask-input';
 import axios from 'axios';
 import { toast } from 'sonner';
-
-// import { EyeOffIcon } from 'lucide-react';
 
 export default function Form() {
 
@@ -29,19 +28,31 @@ export default function Form() {
     }
   }
 
+  const inputEndereço = useRef<HTMLInputElement>(null);
+  const inputCity = useRef<HTMLInputElement>(null);
+
+
   const cepApi = axios.create({
     baseURL: "https://brasilapi.com.br/api/cep/v2",
   })
 
   function handleOnBlur( event :  React.FocusEvent<HTMLInputElement> ) {
     const cep = event.currentTarget.value;
+
     cepApi.get(`/${cep}`)
       .then((response) => {
-        console.log(response.data.city);
+
+        inputCity.current.disabled = false;
+        inputCity.current.value = response.data.city;
+
+        inputEndereço.current.disabled = false;
+        inputEndereço.current.value = response.data.street;
+        
       })
       .catch( () => {
         toast.error("CEP inválido!")
       })
+
   }
 
   return (
@@ -70,12 +81,10 @@ export default function Form() {
                   size={20}
                 />
               ) : (
-
                 <EyeOffIcon
                   className="text-slate-600 cursor-pointer"
                   size={20}
                 />
-
               )}
             </button>
           </span>
@@ -93,12 +102,10 @@ export default function Form() {
                   size={20}
                 />
               ) : (
-
                 <EyeOffIcon
                   className="text-slate-600 cursor-pointer"
                   size={20}
                 />
-
               )}
             </button>
           </span>
@@ -114,7 +121,7 @@ export default function Form() {
       </div>
       <div className="mb-4">
         <label htmlFor="cep">CEP</label>
-        <input type="text" id="cep" ref={withMask('99999-999')} onBlur={( e ) => handleOnBlur (e)} />
+        <input type="text" id="cep" ref={withMask('99999-999')} onBlur={( e ) => handleOnBlur (e)} required />
       </div>
       <div className="mb-4">
         <label htmlFor="address">Endereço</label>
@@ -122,6 +129,7 @@ export default function Form() {
           className="disabled:bg-slate-200"
           type="text"
           id="address"
+          ref={inputEndereço}
           disabled
         />
       </div>
@@ -132,6 +140,7 @@ export default function Form() {
           className="disabled:bg-slate-200"
           type="text"
           id="city"
+          ref={inputCity}
           disabled
         />
       </div>
