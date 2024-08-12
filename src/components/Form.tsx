@@ -1,14 +1,12 @@
 import { EyeIcon, Loader2 } from 'lucide-react';
 import { EyeOffIcon } from 'lucide-react';
 import { useState } from 'react';
-import { useRef } from 'react';
 import { useHookFormMask} from 'use-mask-input';
 import { cepApi } from '../rotasApi/cepApi';
 import { toast } from 'sonner';
 import { FieldValues, useForm } from 'react-hook-form'
 import { codanteApi } from '../rotasApi/codanteApi';
 import { ErrorMessage } from '@hookform/error-message';
-import { AxiosHeaders } from 'axios';
 
 export default function Form() {
 
@@ -16,7 +14,7 @@ export default function Form() {
   const [isPassWrdVisibleConfirm, setIsPassWordVisibleConfirm] = useState(false);
   const [isDisable , setIsDisable] = useState(true)
 
-  const { handleSubmit, register, setValue , formState: { isSubmitting, errors } } = useForm()
+  const { handleSubmit, register, setError , setValue , formState: { isSubmitting, errors } } = useForm()
 
   const registerWithMask = useHookFormMask(register);
 
@@ -47,6 +45,11 @@ export default function Form() {
     })
       .then((response) => {
         console.log(response)
+      })
+      .catch((erros)=>{
+        for (const field in erros.response.data.errors){
+          setError(field , {type : 'manual' , message : erros.response.data.errors[field] })
+        }
       })
 
   }
